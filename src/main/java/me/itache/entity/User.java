@@ -5,8 +5,10 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "users")
 public class User {
     @Id
     @Length(min = 4, max = 50)
