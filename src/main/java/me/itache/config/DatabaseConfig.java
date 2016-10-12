@@ -9,6 +9,7 @@ import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
+import java.net.URI;
 import java.util.Properties;
 
 @Configuration
@@ -16,15 +17,6 @@ import java.util.Properties;
 public class DatabaseConfig {
     @Value("${db.driver}")
     private String DB_DRIVER;
-
-    @Value("${db.url}")
-    private String DB_URL;
-
-    @Value("${db.username}")
-    private String DB_USERNAME;
-
-    @Value("${db.password}")
-    private String DB_PASSWORD;
 
     @Value("${hibernate.dialect}")
     private String HIBERNATE_DIALECT;
@@ -42,9 +34,9 @@ public class DatabaseConfig {
     public DataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(DB_DRIVER);
-        dataSource.setUrl(DB_URL);
-        dataSource.setUsername(DB_USERNAME);
-        dataSource.setPassword(DB_PASSWORD);
+        dataSource.setUrl("jdbc:postgresql://" + dbURI().getHost() + ":" + dbURI().getPort() + dbURI().getPath());
+        dataSource.setUsername(dbURI().getUserInfo().split(":")[0]);
+        dataSource.setPassword(dbURI().getUserInfo().split(":")[1]);
         return dataSource;
     }
 
@@ -59,6 +51,11 @@ public class DatabaseConfig {
         properties.put("hibernate.hbm2ddl.auto", HIBERNATE_HBM2DDL_AUTO);
         sessionFactoryBean.setHibernateProperties(properties);
         return sessionFactoryBean;
+    }
+
+    @Bean
+    public URI dbURI(){
+        return URI.create(System.getenv("DATABASE_URL"));
     }
 
     @Bean
