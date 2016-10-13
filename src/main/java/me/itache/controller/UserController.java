@@ -6,20 +6,17 @@ import me.itache.entity.User;
 import me.itache.service.UserService;
 import me.itache.util.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Calendar;
 
 @RestController
 @RequestMapping("/users")
@@ -29,6 +26,12 @@ public class UserController {
 
     @Autowired
     private UserService service;
+
+    @RequestMapping(value="/me", method = RequestMethod.GET)
+    @ResponseBody
+    public Object getCurrent() {
+        return SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
 
     @RequestMapping(value = "/{login}", method = RequestMethod.GET)
     @ResponseBody

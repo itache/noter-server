@@ -18,6 +18,15 @@ public class DatabaseConfig {
     @Value("${db.driver}")
     private String DB_DRIVER;
 
+    @Value("${db.url}")
+    private String DB_URL;
+
+    @Value("${db.username}")
+    private String DB_USER;
+
+    @Value("${db.password}")
+    private String DB_PASS;
+
     @Value("${hibernate.dialect}")
     private String HIBERNATE_DIALECT;
 
@@ -53,7 +62,7 @@ public class DatabaseConfig {
         return sessionFactoryBean;
     }
 
-    @Bean
+
     public URI dbURI(){
         return URI.create(System.getenv("DATABASE_URL"));
     }
